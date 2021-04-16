@@ -1,0 +1,96 @@
+---
+title: "Untitled"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+install.packages("quanteda")
+install.packages("dplyr")
+install.packages("tidyverse")
+install.packages("utf8")
+install.packages("ggplot2")
+library(utf8)
+getwd()
+setwd("C:/Users/Cristobal/Desktop")
+primer_tiempo2020 <- read_csv("Primer_Tiempo2020.csv", col_names = TRUE)
+attach(primer_tiempo2020)
+summary(primer_tiempo2020) ## Anális inicial de la data 
+
+## Para que la base de datos sea más amigable, borramos los datos char
+primer_tiempo2020 <- primer_tiempo2020[,!(colnames(primer_tiempo2020) %in% c("id_partido", "fasepartido", "local", "tiempo","formationUsed", "torneo"))]
+primer_tiempo2020 ## Como vemos, se eliminaron 6 variables 
+
+
+
+
+
+```
+```{r}
+## Ahora, podemos desarrollar un análisis más descriptivo de nuestra base de datos.
+
+## Ordenamos y creamos un nuevo dataframe 
+futbol2020 <- primer_tiempo2020[order(primer_tiempo2020$accuratePass, decreasing = TRUE),]
+futbol2020
+summary(totalYellowCard) 
+## Como vemos, la máxima de tarjetas amarillas en un partido fue de 3, el mínimo 0 y la media es de 1 tarjeta amarilla por partido.
+summary(totalRedCard) ## En el caso de las tarjetas rojas fue de 1 por partido el máximo y 0 el mínimo. 
+
+
+```
+```{r}
+futbol2020_goles = fh2020[,colnames(primer_tiempo2020) %in% c("equipo", "partido", "goalsConceded", "goalKicks", "penGoalsConceded","ownGoals","golesSalvados")]
+futbol2020_goles
+futbol2020_goles = futbol2020_goles[order(futbol2020_goles$golesSalvados, decreasing = TRUE),]
+futbol2020_goles
+## Los partidos que tuvieron más goles salvados fueron U. Calera vs UC, Iquique Vs Everton, Unión Española vs Iquique.
+
+
+```
+```{r}
+## Ahora, como soy fanático de Universidad Católica, quiero saber el rendimiento de mi club con los partidos del 2020.
+
+UC <- filter(primer_tiempo2020, equipo == "Universidad Cat<f3>lica")
+UC
+UC_goles<-filter(futbol2020_goles,equipo=="Universidad Cat<f3>lica")
+UC_goles
+
+```
+
+
+```{r}
+UC_goles <- UC_goles[,!(colnames(UC_goles) %in% c("equipo"))] 
+Max_goles
+Max_goles <- c("Maxgoles",max(UC_goles$goalsConceded),max(UC_goles$goalKicks),max(UC_goles$goalAssist),max(UC_goles$golesSalvados),max(UC_goles$goals),max(UC_goles$penGoalsConceded),max(UC_goles$ownGoals),max(UC_goles$golesSalvados))
+UC_goles <- rbind(UC_goles, Max_goles)
+UC_goles
+```
+
+
+
+
+```{r}
+dotchart(UC$accuratePass, labels = utf8_encode(UC$partido), cex=0.5, xlab = "Pases", ylab = "Partido")
+```
+
+
+
+```{r}
+dotchart(UC$minutos_juego, labels = utf8_encode(UC$partido), main="Minutos de juego por partido", pch = 16, col=c("darkblue","green"),lcolor="red", cex=0.8, xlab = "Minutos", ylab = "Partido", cex.main=2,cex.lab=1.5)
+```
+
+
+```{r}
+dotchart(UC$minutos_juego, labels = utf8_encode(UC$partido), main="Minutos de juego por partido", pch = 16, col=c("darkblue","green"),lcolor="red", cex=0.8, xlab = "Minutos", ylab = "Partido", cex.main=2,cex.lab=1.5)
+
+```
+```{r}
+dotchart(UC$totalPass, labels = utf8_encode(UC$partido), main="Total de Pases ", pch = 16, col=c("darkblue","Orange"),lcolor="red", cex=0.8, xlab = "Pases", ylab = "Partido", cex.main=2,cex.lab=1.5)
+```
+```{r}
+
+```
+
+
